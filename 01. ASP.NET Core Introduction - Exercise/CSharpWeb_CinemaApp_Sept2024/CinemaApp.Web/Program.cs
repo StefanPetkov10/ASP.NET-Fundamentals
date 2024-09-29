@@ -4,13 +4,14 @@ using CinemaApp.Data;
 using Microsoft.EntityFrameworkCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+string connectionString = builder.Configuration.GetConnectionString("SQLServer");
 
 // Add services to the container.
 builder.Services.AddDbContext<CinemaDbContext>(optins =>
 {
     //Like OnConfiguration method
 
-    optins.UseSqlServer("Server=.;Database=CinemaDb;Integrated Security=True;");
+    optins.UseSqlServer(connectionString);
 });
 
 builder.Services.AddControllersWithViews();
