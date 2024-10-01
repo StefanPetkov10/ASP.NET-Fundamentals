@@ -25,6 +25,10 @@ namespace CinemaApp.Data.Configuration
                 .HasMaxLength(GenreMaxLength);
 
             builder
+                .Property(m => m.ReleaseDate)
+                .IsRequired();
+
+            builder
                 .Property(m => m.Director)
                 .IsRequired()
                 .HasMaxLength(DirectorMaxLength);

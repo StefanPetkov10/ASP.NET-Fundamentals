@@ -14,6 +14,7 @@ namespace CinemaApp.Web.ViewModels.Movie
         public string Genre { get; set; } = null!;
 
         [Required]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{dd/MM/yyyy}")]
         public string ReleaseDate { get; set; } = null!;
 
         [Range(DurationMinValue, DurationMaxValue)]
