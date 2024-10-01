@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CinemaApp.Cammon\CinemaApp.Cammon.csproj" />
+  </ItemGroup>
+
 </Project>
