@@ -19,7 +19,7 @@
             <tr>
                 <td>@movie.Title</td>
                 <td>@movie.Genre</td>
-                <td>@movie.ReleaseDate.ToString("dd//MM/yyyy")</td>
+                <td>@movie.ReleaseDate.ToString("MM/yyyy")</td>
                 <td>@movie.Duration minutes</td>
                 <td>
                     <a asp-action="Details" asp-route-id="@movie.Id" class="btn btn-info">Details</a>

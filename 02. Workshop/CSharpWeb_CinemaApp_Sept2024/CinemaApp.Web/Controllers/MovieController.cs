@@ -42,7 +42,7 @@ namespace CinemaApp.Web.Controllers
             }
 
             bool isReleaseDateValid = DateTime.TryParseExact(inputModel.ReleaseDate,
-                "dd/MM/yyyy",
+                "MM/yyyy",
                 CultureInfo.InvariantCulture,
                 DateTimeStyles.None,
                 out DateTime releseDate);
