@@ -7,7 +7,7 @@ namespace CinemaApp.Web.ViewModels.Movie
 
         public AddMovieFromModel()
         {
-            this.ReleaseDate = DateTime.UtcNow.ToString("dd/MM/yyyy");
+            this.ReleaseDate = DateTime.UtcNow.ToString(ReleaseDateFormat);
         }
 
         [Required]

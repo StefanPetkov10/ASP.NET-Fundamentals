@@ -3,6 +3,8 @@ using CinemaApp.Data;
 using CinemaApp.Data.Models;
 using CinemaApp.Web.ViewModels.Movie;
 using Microsoft.AspNetCore.Mvc;
+using static CinemaApp.Cammon.EntityValidationConstants.Movie;
+
 
 namespace CinemaApp.Web.Controllers
 {
@@ -42,7 +44,7 @@ namespace CinemaApp.Web.Controllers
             }
 
             bool isReleaseDateValid = DateTime.TryParseExact(inputModel.ReleaseDate,
-                "MM/yyyy",
+                ReleaseDateFormat,
                 CultureInfo.InvariantCulture,
                 DateTimeStyles.None,
                 out DateTime releseDate);

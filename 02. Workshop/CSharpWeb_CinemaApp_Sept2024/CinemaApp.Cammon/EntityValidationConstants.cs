@@ -9,6 +9,7 @@
             public const int GenreMinLength = 5;
             public const int DurationMinValue = 1;
             public const int DurationMaxValue = 999;
+            public const string ReleaseDateFormat = "MM/yyyy";
             public const int DirectorMinLength = 10;
             public const int DirectorMaxLength = 80;
             public const int DescriptionMinLength = 50;
