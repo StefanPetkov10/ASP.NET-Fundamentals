@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CinemaApp.Cammon\CinemaApp.Cammon.csproj" />
+    <ProjectReference Include="..\CinemaApp.Cammon\CinemaApp.Common.csproj" />
   </ItemGroup>
 
 </Project>

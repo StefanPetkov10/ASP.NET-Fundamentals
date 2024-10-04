@@ -5,6 +5,7 @@
         public Movie()
         {
             this.Id = Guid.NewGuid();
+            this.MovieCinemas = new HashSet<CinemaMovie>();
         }
 
         public Guid Id { get; set; }
@@ -20,5 +21,7 @@
         public int Duration { get; set; }
 
         public string Description { get; set; } = null!;
+
+        public virtual ICollection<CinemaMovie> MovieCinemas { get; set; }
     }
 }

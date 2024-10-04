@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-using static CinemaApp.Cammon.EntityValidationConstants.Movie;
+using static CinemaApp.Common.EntityValidationConstants.Movie;
 
 namespace CinemaApp.Data.Configuration
 {
@@ -37,6 +37,9 @@ namespace CinemaApp.Data.Configuration
                 .Property(m => m.Description)
                 .IsRequired()
                 .HasMaxLength(DescriptionMaxLength);
+
+            builder
+                .Property(m => m.MovieCinemas);
 
             builder
                 .HasData(this.SeedMovies());

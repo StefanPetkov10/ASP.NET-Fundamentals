@@ -1,4 +1,4 @@
-﻿namespace CinemaApp.Cammon
+﻿namespace CinemaApp.Common
 {
     public static class ApplicationConstants
     {

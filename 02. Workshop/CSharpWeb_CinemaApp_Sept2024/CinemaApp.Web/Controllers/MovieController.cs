@@ -3,7 +3,7 @@ using CinemaApp.Data;
 using CinemaApp.Data.Models;
 using CinemaApp.Web.ViewModels.Movie;
 using Microsoft.AspNetCore.Mvc;
-using static CinemaApp.Cammon.EntityValidationConstants.Movie;
+using static CinemaApp.Common.EntityValidationConstants.Movie;
 
 
 namespace CinemaApp.Web.Controllers
@@ -51,8 +51,8 @@ namespace CinemaApp.Web.Controllers
 
             if (!isReleaseDateValid)
             {
-                this.ModelState.AddModelError(nameof(inputModel.ReleaseDate), "Invalid Release Date. The Release Date must be in the following format: dd/MM/yyyy");
-                return View(inputModel);
+                this.ModelState.AddModelError(nameof(inputModel.ReleaseDate),
+                    "Invalid Release Date. The Release Date must be in the following format: MM/yyyy");
             }
 
             Movie movie = new Movie
