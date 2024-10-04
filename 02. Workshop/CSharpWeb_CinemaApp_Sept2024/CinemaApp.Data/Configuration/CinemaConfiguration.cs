@@ -22,6 +22,61 @@ namespace CinemaApp.Data.Configuration
                 .Property(c => c.Location)
                 .IsRequired()
                 .HasMaxLength(LocationMaxLength);
+
+            builder
+                .HasData(this.GenerateCinemas());
         }
+
+        private IEnumerable<Cinema> GenerateCinemas()
+        {
+            IEnumerable<Cinema> cinemas = new List<Cinema>();
+
+            for (int i = 0; i < 4; i++)
+            {
+                Cinema cinema = new Cinema
+                {
+                    Name = i % 2 == 0 ? "Cinema City" : "Cine Grand",
+                    Location = i switch
+                    {
+                        0 => "Sofia",
+                        1 => "Plovdiv",
+                        2 => "Varna",
+                        3 => "Burgas",
+                        _ => "Invalid location"
+                    }
+                };
+
+                cinemas.Append(cinema);
+            }
+
+            return cinemas;
+        }
+
+        //private List<Cinema> SeedCinemas()
+        //{
+        //    return new List<Cinema>
+        //    {
+        //        new Cinema
+        //        {
+        //            Name = "Cinema City",
+        //            Location = "Sofia"
+        //        },
+        //        new Cinema
+        //        {
+        //            Name = "Cine Grand",
+        //            Location = "Plovdiv"
+        //        },
+        //        new Cinema
+        //        {
+        //            Name = "Cinema City",
+        //            Location = "Varna"
+        //        },
+        //        new Cinema
+        //        {
+        //            Name = "Cine Grand",
+        //            Location = "Burgas"
+        //        }
+        //    };
+        //}
     }
 }
