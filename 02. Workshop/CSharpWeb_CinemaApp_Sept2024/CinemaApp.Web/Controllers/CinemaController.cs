@@ -2,6 +2,7 @@
 using CinemaApp.Data.Models;
 using CinemaApp.Web.ViewModels.Cinema;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CinemaApp.Web.Controllers
 {
@@ -14,29 +15,30 @@ namespace CinemaApp.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            IEnumerable<CinemaIndexViewModel> allCinemas = this.dbContext
-                .Cinemas
-                .Select(c => new CinemaIndexViewModel()
-                {
-                    Id = c.Id.ToString(),
-                    Name = c.Name,
-                    Location = c.Location
-                })
-                .ToList();
+            IEnumerable<CinemaIndexViewModel> allCinemas = await this.dbContext
+               .Cinemas
+               .Select(c => new CinemaIndexViewModel()
+               {
+                   Id = c.Id.ToString(),
+                   Name = c.Name,
+                   Location = c.Location
+               })
+               .OrderBy(c => c.Location)
+               .ToArrayAsync();
 
             return View(allCinemas);
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult Create(AddCinemaFromModel inputModel)
+        public async Task<IActionResult> Create(AddCinemaFromModel inputModel)
         {
             if (this.ModelState.IsValid == false)
             {
@@ -49,8 +51,8 @@ namespace CinemaApp.Web.Controllers
                 Location = inputModel.Location
             };
 
-            this.dbContext.Cinemas.Add(cinema);
-            this.dbContext.SaveChanges();
+            await this.dbContext.Cinemas.AddAsync(cinema);
+            await this.dbContext.SaveChangesAsync();
 
             return this.RedirectToAction(nameof(Index));
         }
