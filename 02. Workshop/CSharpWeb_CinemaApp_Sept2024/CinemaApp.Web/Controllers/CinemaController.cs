@@ -1,4 +1,5 @@
 ﻿using CinemaApp.Data;
+using CinemaApp.Data.Models;
 using CinemaApp.Web.ViewModels.Cinema;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,6 +33,26 @@ namespace CinemaApp.Web.Controllers
         public IActionResult Create()
         {
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(AddCinemaFromModel inputModel)
+        {
+            if (this.ModelState.IsValid == false)
+            {
+                return View(inputModel);
+            }
+
+            Cinema cinema = new Cinema
+            {
+                Name = inputModel.Name,
+                Location = inputModel.Location
+            };
+
+            this.dbContext.Cinemas.Add(cinema);
+            this.dbContext.SaveChanges();
+
+            return this.RedirectToAction(nameof(Index));
         }
     }
 }
