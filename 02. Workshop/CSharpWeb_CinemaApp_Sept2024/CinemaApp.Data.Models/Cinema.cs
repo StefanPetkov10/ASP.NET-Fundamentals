@@ -4,6 +4,7 @@
     {
         public Cinema()
         {
+            Id = Guid.NewGuid();
             CinemaMovies = new HashSet<CinemaMovie>();
         }
         public Guid Id { get; set; }

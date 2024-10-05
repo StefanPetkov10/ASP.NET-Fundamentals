@@ -39,9 +39,6 @@ namespace CinemaApp.Data.Configuration
                 .HasMaxLength(DescriptionMaxLength);
 
             builder
-                .Property(m => m.MovieCinemas);
-
-            builder
                 .HasData(this.SeedMovies());
         }
 

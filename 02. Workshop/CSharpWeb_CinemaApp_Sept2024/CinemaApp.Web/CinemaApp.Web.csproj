@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="CinemaApp.Web.Infrasturcture\**" />
+    <Content Remove="CinemaApp.Web.Infrasturcture\**" />
+    <EmbeddedResource Remove="CinemaApp.Web.Infrasturcture\**" />
+    <None Remove="CinemaApp.Web.Infrasturcture\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -17,6 +24,7 @@
   <ItemGroup>
     <ProjectReference Include="..\CinemaApp.Cammon\CinemaApp.Cammon.csproj" />
     <ProjectReference Include="..\CinemaApp.Data\CinemaApp.Data.csproj" />
+    <ProjectReference Include="..\CinemaApp.Web.Infrastructure\CinemaApp.Web.Infrastructure.csproj" />
     <ProjectReference Include="..\CinemaApp.Web.ViewModels\CinemaApp.Web.ViewModels.csproj" />
   </ItemGroup>
 

@@ -1,6 +1,5 @@
-
-
 using CinemaApp.Data;
+using CinemaApp.Web.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -37,4 +36,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+app.ApplyMigrations();
 app.Run();
