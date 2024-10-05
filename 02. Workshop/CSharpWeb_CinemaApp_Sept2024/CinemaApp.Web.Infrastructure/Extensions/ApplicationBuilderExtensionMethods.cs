@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace CinemaApp.Web.Infrastructure.Extensions
 {
-    public static class ExtensionMethods
+    public static class ApplicationBuilderExtensionMethods
     {
         public static IApplicationBuilder ApplyMigrations(this IApplicationBuilder app)
         {
