@@ -25,3 +25,16 @@ namespace CinemaApp.Data.Configuration
         }
     }
 }
+/* private IEnumerable<CinemaMovie> GenerateCinemasMovies()
+{
+    IEnumerable<CinemaMovie> cinemaMovies = new List<CinemaMovie>()
+    {
+        new CinemaMovie
+        {
+            CinemaId = Guid.Parse("d3b8f4b3-3b3b-4b1b-8b1b-3b3b3b3b3b3b"),
+            MovieId = Guid.Parse("d3b8f4b3-3b3b-4b1b-8b1b-3b3b3b3b3b3b")
+        }
+    };
+    return cinemaMovies;
+}
+*/
