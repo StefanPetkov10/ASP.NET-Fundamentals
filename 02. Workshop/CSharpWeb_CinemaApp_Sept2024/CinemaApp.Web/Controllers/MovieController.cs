@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using CinemaApp.Data;
 using CinemaApp.Data.Models;
+using CinemaApp.Web.ViewModels.Cinema;
 using CinemaApp.Web.ViewModels.Movie;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -97,6 +98,43 @@ namespace CinemaApp.Web.Controllers
             //}
 
             return View(movie);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddToProgram(string id)
+        {
+            Guid movieGuid = Guid.Empty;
+            bool isGuidValid = this.IsGuidIdValid(id, ref movieGuid);
+            if (!isGuidValid)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            Movie? movie = await this.dbContext.Movies
+                .FirstOrDefaultAsync(x => x.Id == movieGuid);
+            if (movie == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            AddMovieToCinemaInputModel viewModel = new AddMovieToCinemaInputModel
+            {
+                Id = id!,
+                MovieTitle = movie.Title,
+                Cinemas = await this.dbContext.Cinemas
+                .Include(cm => cm.CinemaMovies)
+                .ThenInclude(m => m.Movie)
+                    .Select(c => new CinemaCheckBoxItemInputModel
+                    {
+                        Id = c.Id.ToString(),
+                        Name = c.Name,
+                        IsSelected = c.CinemaMovies
+                        .Any(cm => cm.MovieId == movieGuid)
+                    })
+                    .ToArrayAsync()
+            };
+
+            return View(viewModel);
         }
     }
 }
