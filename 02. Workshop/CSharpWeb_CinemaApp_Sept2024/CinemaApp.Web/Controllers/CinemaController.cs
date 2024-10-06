@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CinemaApp.Web.Controllers
 {
-    public class CinemaController : Controller
+    public class CinemaController : BaseController
     {
         private readonly CinemaDbContext dbContext;
         public CinemaController(CinemaDbContext dbContext)
@@ -62,7 +62,7 @@ namespace CinemaApp.Web.Controllers
         public async Task<IActionResult> Details(string? id)
         {
             Guid cinemaGuidId = Guid.Empty;
-            bool IsCinemaIdValid = this.IsCinemaIdValid(id, ref cinemaGuidId);
+            bool IsCinemaIdValid = this.IsGuidIdValid(id, ref cinemaGuidId);
 
             if (!IsCinemaIdValid)
             {
@@ -94,24 +94,6 @@ namespace CinemaApp.Web.Controllers
             };
 
             return this.View(cinemaDetailsViewModel);
-        }
-
-        private bool IsCinemaIdValid(string? id, ref Guid cinemaGuidId)
-        {
-            // Non-existing parameter in the URL
-            if (string.IsNullOrEmpty(id))
-            {
-                return false;
-            }
-
-            // Invalid parameter in the URL
-            bool isGuidValid = Guid.TryParse(id, out cinemaGuidId);
-            if (!isGuidValid)
-            {
-                return false;
-            }
-
-            return true;
         }
     }
 }

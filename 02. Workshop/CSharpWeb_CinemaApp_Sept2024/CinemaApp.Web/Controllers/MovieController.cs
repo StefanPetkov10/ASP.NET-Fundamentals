@@ -8,7 +8,7 @@ using static CinemaApp.Common.EntityValidationConstants.Movie;
 
 namespace CinemaApp.Web.Controllers
 {
-    public class MovieController : Controller
+    public class MovieController : BaseController
     {
         private readonly CinemaDbContext dbContext;
 
@@ -74,14 +74,15 @@ namespace CinemaApp.Web.Controllers
         [HttpGet]
         public IActionResult Details(string id)
         {
-            bool isValid = Guid.TryParse(id, out Guid guidId);
-            if (!isValid)
+            Guid movieGuid = Guid.Empty;
+            bool isGuidValid = this.IsGuidIdValid(id, ref movieGuid);
+            if (!isGuidValid)
             {
                 return RedirectToAction(nameof(Index));
             }
 
             Movie? movie = this.dbContext.Movies
-                .FirstOrDefault(x => x.Id == guidId);
+                .FirstOrDefault(x => x.Id == movieGuid);
 
             if (movie == null)
             {
