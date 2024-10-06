@@ -3,6 +3,7 @@ using CinemaApp.Data;
 using CinemaApp.Data.Models;
 using CinemaApp.Web.ViewModels.Movie;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using static CinemaApp.Common.EntityValidationConstants.Movie;
 
 
@@ -18,23 +19,23 @@ namespace CinemaApp.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            IEnumerable<Movie> allMovies = this.dbContext
+            IEnumerable<Movie> allMovies = await this.dbContext
                 .Movies
-                .ToList();
+                .ToArrayAsync();
 
             return View(allMovies);
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult Create(AddMovieFromModel inputModel)
+        public async Task<IActionResult> Create(AddMovieFromModel inputModel)
         {
             // TODO: Add form model + validation
             if (this.ModelState.IsValid == false)
@@ -65,14 +66,14 @@ namespace CinemaApp.Web.Controllers
                 Description = inputModel.Description
             };
 
-            this.dbContext.Movies.Add(movie);
-            this.dbContext.SaveChanges();
+            await this.dbContext.Movies.AddAsync(movie);
+            await this.dbContext.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
-        public IActionResult Details(string id)
+        public async Task<IActionResult> Details(string id)
         {
             Guid movieGuid = Guid.Empty;
             bool isGuidValid = this.IsGuidIdValid(id, ref movieGuid);
@@ -81,8 +82,8 @@ namespace CinemaApp.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            Movie? movie = this.dbContext.Movies
-                .FirstOrDefault(x => x.Id == movieGuid);
+            Movie? movie = await this.dbContext.Movies
+                .FirstOrDefaultAsync(x => x.Id == movieGuid);
 
             if (movie == null)
             {
