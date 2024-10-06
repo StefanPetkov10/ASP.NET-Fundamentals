@@ -1,6 +1,7 @@
 ﻿using CinemaApp.Data;
 using CinemaApp.Data.Models;
 using CinemaApp.Web.ViewModels.Cinema;
+using CinemaApp.Web.ViewModels.Movie;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -55,6 +56,62 @@ namespace CinemaApp.Web.Controllers
             await this.dbContext.SaveChangesAsync();
 
             return this.RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(string? id)
+        {
+            Guid cinemaGuidId = Guid.Empty;
+            bool IsCinemaIdValid = this.IsCinemaIdValid(id, ref cinemaGuidId);
+
+            if (!IsCinemaIdValid)
+            {
+                return this.RedirectToAction(nameof(Index));
+            }
+
+            Cinema? cinema = await this.dbContext.Cinemas
+               .Include(cm => cm.CinemaMovies)
+               .ThenInclude(m => m.Movie)
+               .FirstOrDefaultAsync(c => c.Id == cinemaGuidId);
+
+            // Invalid(non-existing) GUID in the URL
+            if (cinema == null)
+            {
+                return this.RedirectToAction(nameof(Index));
+            }
+
+            CinemaDetailsViewModel cinemaDetailsViewModel = new CinemaDetailsViewModel
+            {
+                Name = cinema.Name,
+                Location = cinema.Location,
+                Movies = cinema.CinemaMovies
+                    .Select(cm => new CinemaMovieViewModel
+                    {
+                        Title = cm.Movie.Title,
+                        Duration = cm.Movie.Duration
+                    })
+                    .ToArray()
+            };
+
+            return this.View(cinemaDetailsViewModel);
+        }
+
+        private bool IsCinemaIdValid(string? id, ref Guid cinemaGuidId)
+        {
+            // Non-existing parameter in the URL
+            if (string.IsNullOrEmpty(id))
+            {
+                return false;
+            }
+
+            // Invalid parameter in the URL
+            bool isGuidValid = Guid.TryParse(id, out cinemaGuidId);
+            if (!isGuidValid)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }
