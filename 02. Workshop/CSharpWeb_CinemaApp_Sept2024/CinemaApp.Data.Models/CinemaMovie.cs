@@ -9,5 +9,7 @@
         public Guid MovieId { get; set; }
 
         public virtual Movie Movie { get; set; } = null!;
+
+        public bool IsDeleted { get; set; }
     }
 }
