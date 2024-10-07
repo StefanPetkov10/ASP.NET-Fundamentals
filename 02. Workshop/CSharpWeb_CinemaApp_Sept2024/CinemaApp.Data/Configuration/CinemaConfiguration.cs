@@ -51,7 +51,6 @@ namespace CinemaApp.Data.Configuration
 
             return cinemas;
         }
-
         private List<Cinema> SeedCinemas()
         {
             return new List<Cinema>
