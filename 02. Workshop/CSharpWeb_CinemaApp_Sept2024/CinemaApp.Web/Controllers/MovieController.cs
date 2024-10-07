@@ -128,13 +128,80 @@ namespace CinemaApp.Web.Controllers
                     {
                         Id = c.Id.ToString(),
                         Name = c.Name,
-                        IsSelected = c.CinemaMovies
-                        .Any(cm => cm.MovieId == movieGuid)
+                        Location = c.Location,
+                        IsSelected = false
+                        //IsSelected = c.CinemaMovies
+                        //.Any(cm => cm.MovieId == movieGuid)
                     })
                     .ToArrayAsync()
             };
 
             return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddToProgram(AddMovieToCinemaInputModel model)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(model);
+            }
+
+            Guid movieGuid = Guid.Empty;
+            bool isGuidValid = this.IsGuidIdValid(model.Id, ref movieGuid);
+            if (!isGuidValid)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            Movie? movie = await this.dbContext.Movies
+                .FirstOrDefaultAsync(x => x.Id == movieGuid);
+
+            if (movie == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            ICollection<CinemaMovie> entitiesToAdd = new List<CinemaMovie>();
+
+            foreach (CinemaCheckBoxItemInputModel cinemaInputModel in model.Cinemas)
+            {
+                if (cinemaInputModel.IsSelected)
+                {
+                    Guid cinemaGuid = Guid.Empty;
+                    bool isCinemaGuidValid = this.IsGuidIdValid(cinemaInputModel.Id, ref cinemaGuid);
+                    if (!isCinemaGuidValid)
+                    {
+                        this.ModelState.AddModelError(nameof(model.Cinemas),
+                            "Invalid Cinema selected");
+                        return this.View(model);
+                    }
+
+                    Cinema? cinema = await this.dbContext.Cinemas
+                        .FirstOrDefaultAsync(x => x.Id == cinemaGuid);
+
+                    if (cinema == null)
+                    {
+                        this.ModelState.AddModelError(nameof(model.Cinemas),
+                            "Invalid Cinema selected");
+                        return this.View(model);
+                    }
+
+                    entitiesToAdd.Add(new CinemaMovie
+                    {
+                        CinemaId = cinemaGuid,
+                        MovieId = movieGuid
+                    });
+                }
+                else
+                {
+                }
+            }
+
+            await this.dbContext.CinemasMovies.AddRangeAsync(entitiesToAdd);
+            await this.dbContext.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index), "Cinema");
         }
     }
 }
