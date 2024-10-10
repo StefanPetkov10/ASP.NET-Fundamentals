@@ -1,5 +1,7 @@
 using CinemaApp.Data;
+using CinemaApp.Data.Models;
 using CinemaApp.Web.Infrastructure.Extensions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -12,6 +14,13 @@ builder.Services.AddDbContext<CinemaDbContext>(optins =>
 
     optins.UseSqlServer(connectionString);
 });
+
+builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
+    {
+        //options.SignIn.RequireConfirmedAccount = true;
+    })
+    .AddRoles<IdentityRole<Guid>>()
+    .AddEntityFrameworkStores<CinemaDbContext>();
 
 builder.Services.AddControllersWithViews();
 
@@ -31,11 +40,13 @@ app.UseStaticFiles();
 app.UseRouting();
 
 //Authorization can work only if we know who uses the application -> We need Authentication
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapRazorPages();
 
 app.ApplyMigrations();
 app.Run();
