@@ -30,6 +30,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+//Authorization can work only if we know who uses the application -> We need Authentication
 app.UseAuthorization();
 
 app.MapControllerRoute(
