@@ -15,14 +15,19 @@ builder.Services.AddDbContext<CinemaDbContext>(optins =>
     optins.UseSqlServer(connectionString);
 });
 
-builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
+builder.Services
+    .AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
     {
         //options.SignIn.RequireConfirmedAccount = true;
     })
+    .AddEntityFrameworkStores<CinemaDbContext>()
     .AddRoles<IdentityRole<Guid>>()
-    .AddEntityFrameworkStores<CinemaDbContext>();
+    .AddSignInManager<SignInManager<ApplicationUser>>()
+    .AddUserManager<UserManager<ApplicationUser>>();
+//.AddUserStore<ApplicationUser>();
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
 
 WebApplication app = builder.Build();
 
@@ -40,13 +45,14 @@ app.UseStaticFiles();
 app.UseRouting();
 
 //Authorization can work only if we know who uses the application -> We need Authentication
-app.UseAuthentication();
-app.UseAuthorization();
+app.UseAuthentication(); // First -> Who am I?
+app.UseAuthorization(); // Second -> What can I do?
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-app.MapRazorPages();
+
+app.MapRazorPages(); // Add routing to Identity Razor Pages.  
 
 app.ApplyMigrations();
 app.Run();
