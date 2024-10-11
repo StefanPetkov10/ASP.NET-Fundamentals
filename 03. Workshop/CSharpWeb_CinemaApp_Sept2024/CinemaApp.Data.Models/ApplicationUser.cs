@@ -7,8 +7,9 @@ namespace CinemaApp.Data.Models
         public ApplicationUser()
         {
             this.Id = Guid.NewGuid();
+            this.ApplicationUserMovies = new HashSet<ApplicationUserMovie>();
         }
 
-        //TODO: Add more properties to our user
+        public virtual ICollection<ApplicationUserMovie> ApplicationUserMovies { get; set; }
     }
 }
