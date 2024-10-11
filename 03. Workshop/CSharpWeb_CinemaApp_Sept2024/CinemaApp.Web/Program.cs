@@ -18,7 +18,8 @@ builder.Services.AddDbContext<CinemaDbContext>(optins =>
 builder.Services
     .AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
     {
-        //options.SignIn.RequireConfirmedAccount = true;
+        ConfigureIdentityOptions(builder, options);
+
     })
     .AddEntityFrameworkStores<CinemaDbContext>()
     .AddRoles<IdentityRole<Guid>>()
@@ -56,3 +57,29 @@ app.MapRazorPages(); // Add routing to Identity Razor Pages.
 
 app.ApplyMigrations();
 app.Run();
+
+static void ConfigureIdentityOptions(WebApplicationBuilder builder, IdentityOptions configuration)
+{
+    configuration.Password.RequireDigit =
+        builder.Configuration.GetValue<bool>("Identity:Password:RequireDigit");
+    configuration.Password.RequireLowercase =
+        builder.Configuration.GetValue<bool>("Identity:Password:RequireLowercase");
+    configuration.Password.RequireUppercase =
+        builder.Configuration.GetValue<bool>("Identity:Password:RequireUppercase");
+    configuration.Password.RequireNonAlphanumeric =
+        builder.Configuration.GetValue<bool>("Identity:Password:RequireNonAlphanumeric");
+    configuration.Password.RequiredLength =
+        builder.Configuration.GetValue<int>("Identity:Password:RequiredLength");
+    configuration.Password.RequiredUniqueChars =
+        builder.Configuration.GetValue<int>("Identity:Password:RequiredUniqueChars");
+
+    configuration.User.RequireUniqueEmail =
+        builder.Configuration.GetValue<bool>("Identity:User:RequireUniqueEmail");
+
+    configuration.SignIn.RequireConfirmedEmail =
+        builder.Configuration.GetValue<bool>("Identity:SignIn:RequireConfirmedEmail");
+    configuration.SignIn.RequireConfirmedPhoneNumber =
+        builder.Configuration.GetValue<bool>("Identity:SignIn:RequireConfirmedPhoneNumber");
+    configuration.SignIn.RequireConfirmedAccount =
+        builder.Configuration.GetValue<bool>("Identity:SignIn:RequireConfirmedAccount");
+}
