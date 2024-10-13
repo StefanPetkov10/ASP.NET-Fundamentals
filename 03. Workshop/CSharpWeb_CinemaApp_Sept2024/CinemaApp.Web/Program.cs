@@ -27,6 +27,11 @@ builder.Services
     .AddUserManager<UserManager<ApplicationUser>>();
 //.AddUserStore<ApplicationUser>();
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Identity/Account/Login";
+});
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 

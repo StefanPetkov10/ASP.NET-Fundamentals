@@ -1,7 +1,12 @@
 ﻿using CinemaApp.Data;
 using CinemaApp.Data.Models;
+using CinemaApp.Web.ViewModels.Watchlist;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+using static CinemaApp.Common.EntityValidationConstants.Movie;
 
 namespace CinemaApp.Web.Controllers
 {
@@ -16,16 +21,27 @@ namespace CinemaApp.Web.Controllers
             this.userManager = userManager;
         }
 
-        public IActionResult Index()
+        [Authorize]
+        public async Task<IActionResult> Index()
         {
-            string? userId = this.userManager.GetUserId(this.User);
+            string userId = this.userManager.GetUserId(this.User)!;
 
-            if (String.IsNullOrEmpty(userId))
-            {
-                return this.RedirectToAction("Login");
-            }
 
-            return this.View();
+            IEnumerable<ApplicationUserWatchlistViewModel> watchlist = await this.dbContext
+                .UsersMovies
+                .Include(um => um.Movie)
+                .Where(um => um.ApplicationUserId.ToString().ToLower() == userId.ToLower())
+                .Select(um => new ApplicationUserWatchlistViewModel
+                {
+                    MovieId = um.MovieId.ToString(),
+                    Title = um.Movie.Title,
+                    Genre = um.Movie.Genre,
+                    ReleaseDate = um.Movie.ReleaseDate.ToString(ReleaseDateFormat),
+                    ImageUrl = um.Movie.ImageUrl,
+                })
+                .ToArrayAsync();
+
+            return this.View(watchlist);
         }
     }
 }
