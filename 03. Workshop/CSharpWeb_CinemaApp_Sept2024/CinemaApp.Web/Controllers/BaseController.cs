@@ -4,7 +4,7 @@ namespace CinemaApp.Web.Controllers
 {
     public class BaseController : Controller
     {
-        protected bool IsGuidIdValid(string? id, ref Guid cinemaGuidId)
+        protected bool IsGuidIdValid(string? id, ref Guid parsedGuidId)
         {
             // Non-existing parameter in the URL
             if (string.IsNullOrEmpty(id))
@@ -13,7 +13,7 @@ namespace CinemaApp.Web.Controllers
             }
 
             // Invalid parameter in the URL
-            bool isGuidValid = Guid.TryParse(id, out cinemaGuidId);
+            bool isGuidValid = Guid.TryParse(id, out parsedGuidId);
             if (!isGuidValid)
             {
                 return false;

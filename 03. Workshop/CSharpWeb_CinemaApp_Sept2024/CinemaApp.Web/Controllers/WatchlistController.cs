@@ -10,6 +10,7 @@ using static CinemaApp.Common.EntityValidationConstants.Movie;
 
 namespace CinemaApp.Web.Controllers
 {
+    [Authorize]
     public class WatchlistController : BaseController
     {
         private readonly CinemaDbContext dbContext;
@@ -21,7 +22,7 @@ namespace CinemaApp.Web.Controllers
             this.userManager = userManager;
         }
 
-        [Authorize]
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             string userId = this.userManager.GetUserId(this.User)!;
@@ -42,6 +43,45 @@ namespace CinemaApp.Web.Controllers
                 .ToArrayAsync();
 
             return this.View(watchlist);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddToWatchlist(string movieId)
+        {
+            Guid movieGuid = Guid.Empty;
+            if (!this.IsGuidIdValid(movieId, ref movieGuid))
+            {
+                return this.RedirectToAction(nameof(Index), "Movie");
+            }
+
+            Movie? movie = await this.dbContext
+                .Movies
+                .FirstOrDefaultAsync(m => m.Id == movieGuid);
+            if (movie == null)
+            {
+                return this.RedirectToAction(nameof(Index), "Movie");
+            }
+
+            Guid userGuid = Guid.Parse(this.userManager.GetUserId(this.User)!);
+
+            bool addedToWatchlist = await this.dbContext
+                .UsersMovies
+                .AnyAsync(um => um.ApplicationUserId == userGuid
+                             && um.MovieId == movieGuid);
+
+            if (!addedToWatchlist)
+            {
+                ApplicationUserMovie userMovie = new ApplicationUserMovie
+                {
+                    ApplicationUserId = userGuid,
+                    MovieId = movieGuid
+                };
+
+                await this.dbContext.UsersMovies.AddAsync(userMovie);
+                await this.dbContext.SaveChangesAsync();
+            }
+
+            return this.RedirectToAction(nameof(Index));
         }
     }
 }
