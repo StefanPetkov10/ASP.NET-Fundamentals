@@ -87,6 +87,11 @@ namespace CinemaApp.Web.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
+            if (User.Identity?.IsAuthenticated ?? false)
+            {
+                Response.Redirect("/");
+            }
+
             ReturnUrl = returnUrl;
         }
 
